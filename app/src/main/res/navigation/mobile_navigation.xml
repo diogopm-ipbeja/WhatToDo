@@ -7,5 +7,14 @@
     <fragment
         android:id="@+id/todoListFragment"
         android:name="pt.ipbeja.whattodo.ui.todolist.TodoListFragment"
-        android:label="TodoListFragment" />
+        android:label="TodoListFragment" >
+        <action
+            android:id="@+id/action_todoListFragment_to_todoFragment"
+            app:destination="@id/todoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/todoFragment"
+        android:name="pt.ipbeja.whattodo.ui.todo.TodoFragment"
+        android:label="fragment_todo"
+        tools:layout="@layout/fragment_todo" />
 </navigation>
