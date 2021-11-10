@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ipbeja.whattodo.R
 import pt.ipbeja.whattodo.databinding.FragmentTodoListBinding
 import pt.ipbeja.whattodo.databinding.TodoListItemBinding
 import pt.ipbeja.whattodo.model.Todo
+import pt.ipbeja.whattodo.model.TodoDatabase
 
 class TodoListFragment : Fragment() {
 
@@ -37,10 +39,18 @@ class TodoListFragment : Fragment() {
         binding.todoList.adapter = this.adapter
         binding.todoList.layoutManager = LinearLayoutManager(requireContext())
 
-        /*val list = MutableList(5) {
-            Todo(it.toLong(), "Todo #$it", "")
+        binding.creatTodoBtn.setOnClickListener {
+            findNavController().navigate(
+                TodoListFragmentDirections.actionTodoListFragmentToTodoFragment()
+            )
         }
-        adapter.data = list*/
+
+        val todos = TodoDatabase(requireContext())
+            .todoDao()
+            .getAll()
+
+
+        adapter.data = todos
     }
 
 
@@ -57,7 +67,7 @@ class TodoListFragment : Fragment() {
 
     inner class TodoAdapter : RecyclerView.Adapter<TodoViewHolder>() {
 
-        var data : MutableList<Todo> = mutableListOf()
+        var data : List<Todo> = mutableListOf()
             set(value) {
                 field = value
                 notifyDataSetChanged()

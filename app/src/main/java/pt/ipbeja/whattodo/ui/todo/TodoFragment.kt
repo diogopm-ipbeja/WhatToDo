@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import pt.ipbeja.whattodo.R
 import pt.ipbeja.whattodo.databinding.FragmentTodoBinding
+import pt.ipbeja.whattodo.model.Todo
+import pt.ipbeja.whattodo.model.TodoDatabase
 import pt.ipbeja.whattodo.ui.todolist.TodoListFragmentDirections
 
 
@@ -26,11 +28,23 @@ class TodoFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         binding.createTodo.setOnClickListener {
-            findNavController().navigate(
-                TodoListFragmentDirections.actionTodoListFragmentToTodoFragment()
-            )
+
+            var title = binding.title.text.toString()
+            var description = binding.description.text.toString()
+
+            val todo = Todo(title, description)
+
+            TodoDatabase(requireContext())
+                .todoDao()
+                .insert(todo)
+
+            findNavController().popBackStack()
         }
+
+
+
     }
 
 }
