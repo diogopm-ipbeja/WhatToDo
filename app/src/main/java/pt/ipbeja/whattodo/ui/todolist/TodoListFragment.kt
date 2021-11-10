@@ -5,20 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import pt.ipbeja.whattodo.R
 import pt.ipbeja.whattodo.databinding.FragmentTodoListBinding
+import pt.ipbeja.whattodo.databinding.TodoListItemBinding
+import pt.ipbeja.whattodo.model.Todo
 
 class TodoListFragment : Fragment() {
 
     private lateinit var binding: FragmentTodoListBinding
 
     private lateinit var adapter: TodoAdapter
+    // private val adapter = TodoAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO instanciar o TodoAdapter e colocar no atributo 'adapter'
-
+        this.adapter = TodoAdapter()
     }
 
     override fun onCreateView(
@@ -31,15 +34,49 @@ class TodoListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // TODO configurar a RecyclerView
-        //  atribuir o adapter criado no método [onCreate]
-        //  atribuir um LinearLayoutManager
+        binding.todoList.adapter = this.adapter
+        binding.todoList.layoutManager = LinearLayoutManager(requireContext())
+
+        /*val list = MutableList(5) {
+            Todo(it.toLong(), "Todo #$it", "")
+        }
+        adapter.data = list*/
     }
 
 
-    // TODO definir o TodoAdapter + TodoViewHolder
+    inner class TodoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    inner class TodoAdapter // TODO extend RecyclerView.Adapter ...
+        private val binding = TodoListItemBinding.bind(view)
 
-    inner class TodoViewHolder // TODO extend RecyclerView.ViewHolder ...
+        fun bind(todo: Todo) {
+            binding.todoTitle.text = todo.title
+        }
+
+    }
+
+
+    inner class TodoAdapter : RecyclerView.Adapter<TodoViewHolder>() {
+
+        var data : MutableList<Todo> = mutableListOf()
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
+
+
+            val v = LayoutInflater.from(parent.context)
+                .inflate(R.layout.todo_list_item, parent, false)
+            return TodoViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
+            holder.bind(data[position])
+        }
+
+        override fun getItemCount() = data.size
+
+    }
+
 }
